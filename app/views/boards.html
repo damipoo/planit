@@ -1,0 +1,24 @@
+
+<div class="page-header">
+  <h1>Boards<button type="button" class="btn btn-primary add-board" ng-click="enableShowNewBoardModal()">+</button></h1> 
+</div>
+
+<div ng-show="showNewBoardModal" class="board list-group-item">
+  <form class="form-horizontal">
+    <div class="form-group">
+      <label for="boardName" class="col-sm-2 control-label">Board Name</label>
+      <div class="col-sm-7">
+        <input type="text" class="form-control" id="boardName" placeholder="Enter board name" ng-model="boardName">
+      </div>
+      <div class="form-group col-sm-3">
+        <button type="button" class="btn btn-default" ng-click="cancelNewBoard()">Cancel</button>
+        <button type="button" class="btn btn-default" ng-click="createBoard()">Add</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<ul class="list-group">
+  <p ng-if="!boards">No boards yet.</p>
+  <li ng-repeat="board in boards" class="board list-group-item"><a href="#/boards/{{board.id}}">{{board.name}}</a></li>
+</ul>

@@ -1,0 +1,34 @@
+<div class="page-header">
+  <h1>Stories<button type="button" class="btn btn-primary add-board" ng-click="enableShowNewIssueModal()">+</button></h1> 
+</div>
+
+<div ng-show="showNewIssueModal" class="issue list-group-item">
+  <form class="form-horizontal">
+    <div class="form-group">
+      <label for="issueName" class="col-sm-2 control-label">Name</label>
+      <div class="col-sm-7">
+        <input type="text" class="form-control" id="issueName" placeholder="Enter issue name" ng-model="issueName">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="issueName" class="col-sm-2 control-label">Description</label>
+      <div class="col-sm-7">
+        <textarea class="form-control" id="issueDescription" placeholder="Enter issue description" ng-model="issueDescription"></textarea>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-9 col-sm-3">
+        <button type="button" class="btn btn-default" ng-click="cancelNewIssue()">Cancel</button>
+        <button type="button" class="btn btn-default" ng-click="createIssue()">Add</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="list-group">
+  <p ng-if="!issues">No stories to show yet</p>
+  <div pi-draggable ng-repeat="issue in issues" class="issue list-group-item issue-status-{{issue.status}}">
+    {{issue.name}}
+    <select class="pull-right" ng-model="issue.status" ng-options="state for state in availableStates" ng-change="updateStatus(issue)"></select>
+  </div>
+</ul>
