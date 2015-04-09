@@ -69,11 +69,13 @@ module.exports = function (grunt) {
         debug:  true,
         script: 'api/server.js'
       },
+      development: {
+      }
     },
 
     open: {
       dev: {
-        url: 'https://127.0.0.1:3006/static/index.html'
+        url: 'http://127.0.0.1:3006/static/index.html'
       }
     },
 
@@ -477,7 +479,7 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
+  grunt.registerTask('serve', 'Compile then start an express application', function (target) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'connect:dist:keepalive']);
     }
@@ -497,11 +499,6 @@ module.exports = function (grunt) {
     'shell:reset-schema',
     'knexmigrate:latest'
   ]);
-
-  grunt.registerTask('server', 'DEPRECATED TASK. Use the "serve" task instead', function (target) {
-    grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
-    grunt.task.run(['serve:' + target]);
-  });
 
   grunt.registerTask('test', [
     'clean:server',
