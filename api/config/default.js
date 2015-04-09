@@ -22,6 +22,11 @@ module.exports = {
       charset:  'utf8'
     }
   },
+  migration: {
+    directory: path.join(root, 'migrations'),
+    tableName: 'migrations',
+    extension: 'js'
+  },  
   express: {
     views:  'app',
     static: [ 'app' ]

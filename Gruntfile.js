@@ -63,6 +63,21 @@ module.exports = function (grunt) {
       }
     },
 
+    express: {
+      options: {
+        port:   process.env.PORT || 3006,
+        debug:  true,
+        script: 'api/server.js'
+      },
+    },
+
+    open: {
+      dev: {
+        url: 'https://127.0.0.1:3006/static/index.html'
+      }
+    },
+
+
     // The actual grunt server settings
     connect: {
       options: {
@@ -419,9 +434,34 @@ module.exports = function (grunt) {
         configFile: 'test/karma.conf.js',
         singleRun: true
       }
+    },
+
+    knexmigrate: function knexmigrate(done) {
+      var util       = require('util');
+      var config     = require('./api/config');
+      var knex       = require('knex')(config.database);
+
+      var knexConfig = {
+        directory: config.migration.directory,
+        tableName: config.migration.tableName,
+        extension: config.migration.extension
+      };
+
+      knex.migrate.latest(knexConfig)
+        .spread(function (batchNo, log) {
+          return log.length === 0 ?
+            ['Already up to date'.cyan] :
+            [util.format('Batch %d run: %d migrations\n%s'.green, batchNo, log.length,
+             log.join('\n').cyan)];
+        })
+        .then(function () {
+          grunt.log.oklns.apply(grunt.log, arguments);
+        })
+        .then(done)
+        .catch(grunt.fatal)
+      ;
     }
   });
-
 
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
     if (target === 'dist') {
@@ -433,10 +473,16 @@ module.exports = function (grunt) {
       'wiredep',
       'concurrent:server',
       'autoprefixer:server',
-      'connect:livereload',
+      'express',
+      'open',
       'watch'
     ]);
   });
+
+  grunt.registerTask('reset-schema', [
+    // 'shell:reset-schema',
+    'knexmigrate:latest'
+  ]);
 
   grunt.registerTask('server', 'DEPRECATED TASK. Use the "serve" task instead', function (target) {
     grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` to start a server.');
