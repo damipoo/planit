@@ -460,6 +460,20 @@ module.exports = function (grunt) {
         .then(done)
         .catch(grunt.fatal)
       ;
+    },
+
+    shell: {
+      options: {
+        execOptions: {
+          // This is the only value that triggers it to
+          // be infinite and grow as much as it wants to
+          maxBuffer: undefined
+        }
+      },
+
+      'reset-schema': {
+        command: './scripts/reset-schema.js'
+      }
     }
   });
 
@@ -480,7 +494,7 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('reset-schema', [
-    // 'shell:reset-schema',
+    'shell:reset-schema',
     'knexmigrate:latest'
   ]);
 
